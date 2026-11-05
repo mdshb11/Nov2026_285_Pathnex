@@ -1,4 +1,4 @@
-# My Playbook
+### My Playbook
 - name: Install Nginx on Pathnex server
   hosts: all
   become: yes
@@ -10,7 +10,7 @@
         state: present
 
 ##Docker
-# Docker Installation & First Container
+# Docker Installation & My First Container
 docker --version
 docker run ubuntu echo "Hii Pathnex"
 
