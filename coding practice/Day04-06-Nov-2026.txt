@@ -1,0 +1,103 @@
+
+# Day4 coding practice of CICD pipeline of Jenkins and GitLab
+
+# Jenkins pipeline
+pipeline {
+    agent any
+    stages {
+        stage("Build") {
+            steps {
+                echo "building the the project"
+                }
+        }
+         stage("Testing") {
+            steps {
+                echo "Testing the the project"
+                }
+        }
+         stage("Deploy") {
+            steps {
+                echo "Deploy the the project"
+                }
+            }
+        }
+    }
+
+## GitLab CI/CD Pipeline
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - echo "Build the project"
+
+test:
+  stage: test
+  script:
+    - echo "testing the application"
+
+deploy:
+  stage: deploy
+  script:
+    - echo "deploying the application"
+
+
+## Ansible — Install and Configuring Nginx
+- name: Install and configure Nginx
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install nginx
+      yum:
+        name: nginx
+        state: present
+
+    - name: Configure nginx
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+
+    - name: Start nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+
+### Terraform — EC2 with Security Group
+resource "aws_security_group" "example" {
+  name        = "security_group"
+  description = "Allow SSH and HTTP"
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
+
+## Docker and Apache Container
+FROM ubuntu:22.04
+RUN apt update && apt install apache2 -y
+RUN echo "Hello shoib" > /var/www/html/index.html
+CMD ["apachectl", "-D", "FOREGROUND"]
+
+## Bash Path
+/var/www/html
