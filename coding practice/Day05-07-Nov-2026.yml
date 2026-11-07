@@ -1,0 +1,102 @@
+#Day05 Adavanced CICD and infrastrure provisioning
+
+## Jenkinsfile of CICD pipline
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                sh 'git clone https://github.com/mdshb11/Nov2026_285_Pathnex.git'
+            }
+        }
+        stage('Build project') {
+            steps {
+                sh 'echo command for the build'
+            }
+        }
+        stage('Testing the code') {
+            steps {
+                sh 'echo command for the test code '
+            }
+        }
+        stage('Deploy the application') {
+            steps {
+                sh 'echo Deploying command for the application'
+            }
+        }
+    }
+}
+
+##Gitlab pipline with docker build psuh test and deploy
+
+staged:
+    - build
+    - push
+    - test
+    - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t shoib-app .
+
+ppush:
+  stage: push
+  script:
+    - docker push shoib-app 
+
+test:
+  stage: test
+  script:
+    - echo command to test the app
+
+deploy:
+  stage: deploy
+  script:
+    - kubectl apply -f kubernetes/deployment.yaml
+
+##Ansible playbook  to create user
+
+- name: create new user
+  hosts: all
+  become: yes
+  tasks:
+    - name: create user
+      user:
+       name: shoib
+       state: present
+       shell: /bin/bash
+    - name: Set permission for the created user
+      file:
+        path: /home/shoib
+        owner: shoib
+        group: shoib
+        mode: '0755'
+
+##Terraform - EC@ with tags and volume
+
+resource "aws_instance" "shoibEC2" {
+  ami             = "ami-ksjadfkj"
+  instance_type   = "t2.medium"
+
+  tags = {
+  Name = "shoib-server"
+  }
+  ebs_block_device {
+    device_name = "/dev/sdh"
+    volume_size = 100
+  }
+}
+
+##Dockerfile
+
+FROM python:3.11
+WOTKDIR /opt/pathnex/shoib-app
+COPY app.py /opt/pathnex/shoib-app
+CMD ["python", "/opt/pathnex/shoib-app"]
+
+#Real path
+
+/opt/pathnex/shoib-app
