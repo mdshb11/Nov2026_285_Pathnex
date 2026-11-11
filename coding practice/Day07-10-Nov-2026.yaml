@@ -1,0 +1,124 @@
+Day-07 Automating Cloud Infrastructure with Ansible  &  Terraform
+
+#ansible script
+
+- name: install nginx service
+  hosts: all
+  become: yes
+  tasks:
+    - name: install nginx service
+      yum:
+        - name: install nginx
+          state: present
+      copy:
+          src: nginx.conf
+          dest: /etc/nginx/nginx.conf
+     - name: start nginx service
+       service:
+        - name: start nginx service
+          state: started
+          enable: yes
+
+#Terraform code for Provision EC2 with IAM Role
+
+resource "aws_iam_role" "ec2_role" {
+  name               = "shoib_ec2_role"
+  assume_role_policy = jsonencode({
+    Version = "2026-10-11"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_instance" "shoib_ec2" {
+  ami           = "ami-sadsfbcd1234"
+  instance_type = "t2.medium"
+  iam_instance_profile = aws_iam_role.ec2_role.name
+  tags = {
+    Name = "shoib-EC2"
+  }
+}
+
+##Kubernetes — ConfigMap and Secret Management
+
+---
+apiVersion:v1
+kind: ConfigMap
+metadata:
+    name: shoib-ConfigMap
+data:
+  app.properties: |
+    key=value
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: shoib-secret
+type: Opaque
+data:
+  password: asdfleHBhc3M=
+
+...
+
+##shell script for archive logs
+
+tar -czf /var/log/archived_log.tar.gz /var/log/*.log
+
+##docker java application code
+
+# JavaScript
+class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello Mr. Shoib");
+    }
+}
+
+#Dockerfile
+
+FROM openjdk:17
+WORKDIR /opt/shoib/java-app
+COPY hello.java .
+RUN javac /opt/shoib/java-app/hello.java
+CMD ["java", "-cp", "/opt/shoib/java-app", "hello"]
+
+# Docker File
+FROM openjdk:17
+WORKDIR /opt/pathnex/java-app
+COPY Hello.java /opt/pathnex/java-app/
+RUN javac /opt/pathnex/java-app/Hello.java
+CMD ["java", "-cp", "/opt/pathnex/java-app", "Hello"]
+
+###Todays class docker command
+#container name - webserver
+#image name - webimage
+
+service docker status --to check docker status
+
+docker info -- all details about docker
+
+service docker start - ----start the docker
+
+docker list
+docker ps
+docker ps -a
+docker network
+docker rm containerid
+docker rmi webimage
+docker stop webserver
+docker start webserver
+docker logs conid
+docker build -t webimage .
+docker tag shoib-app mdshb11/webimage:latest
+docker push mdshb11/webimage
+docker run -d -p 8080:3000 --name webserver webimage
+docker exec -it webserver /bin/bash
+docker network ls
+

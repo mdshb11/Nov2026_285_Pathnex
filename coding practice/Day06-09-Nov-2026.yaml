@@ -1,0 +1,100 @@
+Day 06 introduction to cloudformation and kubernetes advanced concepts
+
+#Ansible playbook for docker
+
+- name: install docker
+  hosts: all
+  become: yes
+  task:
+      - name: install docker
+        yum:
+          name: docker
+          state: present
+
+      - name: start docker service
+        yum:
+          name: docker
+          state: started
+          enabled: yes
+
+#Terraform — Provisioning EC2 with VPC
+
+
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_instance" "shoib_ec2" {
+  ami           = "ami-0abcd1234abcd1234"
+  instance_type = "t3.medium"
+  subnet_id     = aws_subnet.main.id
+  tags = {
+    Name = "shoib-EC2"
+  }
+}
+
+#kubernetes manifest file for pod and volume mount
+
+api: v1
+kind: pod
+metadata:
+  name: shoib-pod
+spec:
+  containers:
+    - name: web
+      image: nginx
+      volumeMounts: 
+        - mountPath: /usr/share/nginx/html
+          name: html-volume
+  volumes:
+    - name: html-volume
+      hostPath:
+        path: /data
+        type: Directory
+
+#Shell script to check running services
+
+#!/bin/bash
+
+services=("nginx" "docker" "httpd")
+for service in "${services[@]}"
+do
+  if systemctl is-active --quiet $service; then
+    echo "$service is running"
+  else
+    echo "$service is not running"
+  fi
+done
+
+#Docker
+# Node.js Application (JavaScript)
+console.log("Hello Pathnex");
+
+# Dockerfile
+FROM node:18
+WORKDIR /opt/shoib/node-app
+COPY app.js /opt/shoib/node-app/
+CMD ["node", "/opt/shoib/node-app/app.js"]
+
+# Real Path
+/opt/shoib/node-app
+
+#some git command
+git status
+git pull 
+git fetch
+git rebase
+git add .
+git commit -m "mycommit"
+git commit -a -m "mycommit"
+git push
+git push -u origin main
+git branch 
+git log
+git branch newbranch
+git switch newbranch
+git clone url
+git branch -d newbranch
+git push origin --delete newbranch
+git remote add origin url
+git branch -M main
