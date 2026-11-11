@@ -116,11 +116,8 @@ docker stop webserver
 docker start webserver
 docker logs conid
 docker build -t webimage .
-<<<<<<< HEAD
 docker tag shoib-app mdshb11/webimage:latest
 docker push mdshb11/webimage
-=======
->>>>>>> main
 docker run -d -p 8080:3000 --name webserver webimage
 docker exec -it webserver /bin/bash
 docker network ls
