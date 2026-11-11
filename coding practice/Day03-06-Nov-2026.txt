@@ -1,0 +1,75 @@
+###Day03 Ansible, Terraform & Kubernetes Basics
+
+
+###Ansible playbook — Install Apache and Start its Service
+- name: Install and Start Apache
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install apache
+      yum:
+        name: httpd
+        state: present
+
+    - name: Start apache
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+
+##Terraform code — EC2 Instance (t3.medium)
+provider "aws" {
+  region = "us-east-1"
+}
+
+
+resource "aws_instance" "PathnexEC2" {
+  ami           = "ami-0aadsasd34"
+  instance_type = "t3.medium"
+  tags = {
+    Name = "Pathnex-T3"
+  }
+}
+
+
+###Kubernetes — Create a ReplicaSet with 11 Replicas
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: shoib-replicaset
+spec:
+  replicas: 11
+  selector:
+    matchLabels:
+      app: shoib-app
+  template:
+    metadata:
+      labels:
+        app: shoib-app
+    spec:
+      containers:
+        - name: app
+          image: nginx
+          ports:
+            - containerPort: 80
+
+
+##Shell Script — User Info
+#!/bin/bash
+echo "Current user: $(whoami)"
+echo "Current user groups: $(groups)"
+
+
+###Docker File for Nginx Web Server
+FROM nginx:latest
+
+COPY index.html /usr/share/nginx/html/index.html
+
+### Bash
+# Real Path
+/usr/share/nginx/html
+
+# Bash commands
+docker build -t shoib-nginx .
+docker run -d -p 80:80 shoib-nginx
