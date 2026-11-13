@@ -1,0 +1,6 @@
+## Shedule of  Thursday-12.11.2026
+
+3hr Morning class ---
+2hr revision of kubernetes 
+2hr coding of ansible, jenkins, gitlab, terraform
+1hr revision of git, docker, linux.
