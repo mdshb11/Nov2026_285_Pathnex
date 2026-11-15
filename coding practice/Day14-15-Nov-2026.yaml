@@ -1,0 +1,144 @@
+# Day 14 — Kubernetes Advanced Concepts & Multi-Environment Deployments
+
+## Ansible — Setup Nginx with Reverse Proxy
+
+```yaml
+
+- name: Setup Nginx with Reverse Proxy
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install nginx
+      yum:
+        name: nginx
+        state: present
+    - name: Configure nginx as reverse proxy
+      template:
+        src: reverse-proxy.conf.j2
+        dest: /etc/nginx/conf.d/reverse-proxy.conf
+    - name: Restart nginx service
+      service:
+        name: nginx
+        state: restarted
+        enabled: yes
+
+### Terraform — Create S3 Bucket with Versioning and Logging
+
+resource "aws_s3_bucket" "shoib_bucket" {
+  bucket = "shoib-bucket"
+  versioning {
+    enabled = true
+  }
+
+  logging {
+    target_bucket = "shoib-log-bucket"
+    target_prefix = "logs/"
+  }
+}
+
+
+####  Kubernetes — Ingress with Nginx Controller
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: shoib-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: shoib.local
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: shoib-service
+              port:
+                number: 80
+#### Jenkinsfile — Build, Test, and Deploy with Stages
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building Docker image...'
+              script {  
+                docker.build('shoib-web-app')
+              }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f kubernetes/deployment.yaml'
+            }
+        }
+    }
+}
+
+### GitLab CI/CD — Multi-Stage Deployment with Helm
+
+stages:
+  - build
+  - push
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t shoib-web-app .
+
+push:
+  stage: push
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
+    - docker push shoib-web-app
+
+deploy:
+  stage: deploy
+  script:
+    - helm upgrade --install shoib-nginx shoib/nginx-ingress
+
+
+### Docker
+# CMD vs ENTRYPOINT
+
+FROM ubuntu
+ENTRYPOINT ["echo"]
+CMD ["Hello shoib"]
+
+#Kubernetes commands with alias
+
+alias k='kubectl'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get svc'
+alias kgd='kubectl get deployments'
+alias kgn='kubectl get nodes'
+alias kgns='kubectl get namespaces'
+alias kdp='kubectl describe pod'
+alias kdd='kubectl describe deployment'
+alias kaf='kubectl apply -f'
+alias kdf='kubectl delete -f'
+alias kl='kubectl logs'
+alias kex='kubectl exec -it'
+alias kctx='kubectl config current-context'
+alias kgnp='kubectl get networkpolicies'
+alias kgall='kubectl get all'
+
+### Save permenently 
+nano ~/.bashrc
+source ~/.bashrc
+
+### Use in this way
+
+kaf deployment.yaml
+kdf deployment.yaml
+kl nginx-pod
+kex nginx-pod -- /bin/bash
