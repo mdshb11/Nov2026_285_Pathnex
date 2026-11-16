@@ -1,0 +1,173 @@
+Day 15 — Automation with Terraform, Ansible, and CI/CD Pipelines
+
+
+# Ansible — Deploy a Web Application to Multiple Hosts
+
+'''yaml
+
+- name: Deploy web application to multiple hosts
+  hosts: all
+  become: yes
+  tasks:
+    - name: Copy web app files
+      copy:
+        src: /path/to/web/app/
+        dest: /var/www/html/
+    - name: Start web app service
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+        
+# Terraform — Create EC2 with ALB (Application Load Balancer)
+
+resource "aws_lb" "mdshoib_lb" {
+  name               = "mdshoib-lb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.allow_ssh_http.id]
+  subnets            = [aws_subnet.public.id]
+}
+
+resource "aws_instance" "mdshoib_ec2" {
+  ami             = "ami-0abcd1234abcd1334"
+  instance_type   = "t2.micro"
+  security_groups = [aws_security_group.allow_ssh_http.name]
+
+  tags = {
+    Name = "mdshoib-EC2"
+  }
+}
+
+# Kubernetes — Helm Chart for Redis with Persistence
+helm install mdshoib-redis bitnami/redis --set persistence.enabled=true --set persistence.size=8Gi
+
+# Jenkinsfile — Multi-Environment Deployment
+
+pipeline {
+    agent any
+    environment {
+        IMAGE_NAME = 'mdshoib-web-app'
+        DEPLOY_ENV = 'production'
+    }
+    stages {
+        stage('Docker Build') {
+            steps {
+                echo 'Building Docker image...'
+                docker.build("${env.IMAGE_NAME}")
+            }
+        }
+        stage('Testing the code') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+        stage('Deploy Application to Kubernetes') {
+            steps {
+                script {
+                    if (env.DEPLOY_ENV == 'production') {
+                        sh 'kubectl apply -f kubernetes/prod-deployment.yaml'
+                    } else {
+                        sh 'kubectl apply -f kubernetes/dev-deployment.yaml'
+                    }
+                }
+            }
+        }
+    }
+}
+
+# GitLab CI/CD — Environment-Specific Deployments
+
+stages:
+  - build
+  - push
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t mdshoib-web-app .
+
+push:
+  stage: push
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
+    - docker push mdshoib-web-app
+
+deploy:
+  stage: deploy
+  script:
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "main" ]; then
+        kubectl apply -f kubernetes/prod-deployment.yaml
+      else
+        kubectl apply -f kubernetes/dev-deployment.yaml
+      fi
+
+
+# Dockerfile
+# Multi RUN Commands
+
+FROM ubuntu
+RUN apt update && \
+    apt install curl -y && \
+    apt install vim -y
+CMD ["echo", "Hello mdshoib"]
+
+# Kubernetes commands with alias
+
+alias k='kubectl'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get svc'
+alias kgd='kubectl get deployments'
+alias kgn='kubectl get nodes'
+alias kgns='kubectl get namespaces'
+alias kdp='kubectl describe pod'
+alias kdd='kubectl describe deployment'
+alias kaf='kubectl apply -f'
+alias kdf='kubectl delete -f'
+alias kl='kubectl logs'
+alias kex='kubectl exec -it'
+alias kctx='kubectl config current-context'
+alias kgnp='kubectl get networkpolicies'
+alias kgall='kubectl get all'
+
+### Save Permenently 
+nano ~/.bashrc
+source ~/.bashrc
+
+### Use in this way
+
+kgp -A
+kgn
+kaf deployment.yaml
+kdf deployment.yaml
+kl nginx-pod
+kex nginx-pod -- /bin/bash
+
+# Backup script for dir
+backup.sh
+
+#!/bin/bash
+
+#source dir
+src_dir="/home/shb/Documents/app"
+
+#back dir
+backup_dir="/home/shb/Documents/backup"
+
+backup_info="/home/shb/Documents/backup"
+
+#Backup app logs
+rsync -avzh $src_dir $backup_dir
+
+if [[ $? -eq 0 ]];
+
+then
+ echo "Successful!! Last backup on" $(date) >> $backup_info/backup_info.txt
+
+else
+ echo "Back not completed!!" >> $backup_info/backup_info.txt
+
+fi

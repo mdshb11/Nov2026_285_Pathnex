@@ -1,0 +1,8 @@
+## Shedule of Sunday-15.11.2026
+-----------------------------------
+3hr     Morning class ---
+3hr     revision of kubernetes and command practice
+2.5hr   coding of ansible terraform, jenkins, gitlab, dockerfile
+1hr     revision
+1hr     english movie
+
