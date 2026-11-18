@@ -138,7 +138,6 @@ docker run -d -p 8020:8020 --name pathnex-redis redis
 
 
 # Terraform commands
-
 terraform init
 terraform fmt
 terraform validate
@@ -153,16 +152,16 @@ terraform output
 terraform show
 
 #Revision of docker commands
-
 sudo service docker start
 sudo service docker status
 docker info
 docker list
-docker inspect container id
+docker inspect containerid or contname
 docker ps 
 docekr ps -a 
 docker rm container name 
-docker rmi image name 
+docker rmi image name
+docker system prune -a
 docker logs  cont id
 docker network ls
 docker start cont id 
@@ -174,7 +173,6 @@ docker run -d -p 80:80 --name cont name imagename
 docker exec -it cont id /bin/bash
 
 #some git command
-
 git status
 git pull 
 git fetch
