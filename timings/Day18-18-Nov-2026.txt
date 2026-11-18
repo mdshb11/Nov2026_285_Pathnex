@@ -1,0 +1,8 @@
+## Shedule of Wednesday-18.11.2026
+-----------------------------------
+3 hr     Morning class ---
+-
+2 hr     revision of Terraform
+2 hr     english videos and command revised - git, docker, terraform
+1.5 hr   coding of ansible terraform, jenkins, gitlab, K8S yaml
+30 min   introduction video
