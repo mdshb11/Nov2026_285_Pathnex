@@ -1,0 +1,7 @@
+## Shedule of Sunday-22.11.2026
+-----------------------------------
+-
+3 hr     revision of ansible and monitoring
+2 hr     english videos and command
+1 hr     coding of ansible terraform, jenkins, gitlab, K8S yaml
+30 min   introduction video
