@@ -128,3 +128,4 @@ git branch -d newbranch
 git push origin --delete newbranch
 git remote add origin url
 git branch -M main
+git diff origin/24_nov..24_nov
