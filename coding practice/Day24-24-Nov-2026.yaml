@@ -1,0 +1,130 @@
+# Day 24 — Advanced Terraform Modules and CI/CD Pipeline Scaling
+
+## # Ansible — Deploy Docker Containers with Kubernetes Using Helm
+
+```yaml
+- name: Deploy Docker Containers with Helm
+  hosts: localhost
+  tasks:
+    - name: Install Helm
+      command: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+    - name: Deploy microservices with Helm
+      command: helm install pathnex-app ./microservice-chart
+# Terraform — Multi-Module Infrastructure with Outputs
+module "pathnex_vpc" {
+  source = "./vpc"
+}
+
+module "pathnex_instance" {
+  source = "./instance"
+  vpc_id = module.pathnex_vpc.vpc_id
+}
+
+output "instance_id" {
+  value = module.pathnex_instance.instance_id
+}
+# Kubernetes — Helm-based Auto-Scaling Deployments
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pathnex-web-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pathnex-web-app
+  template:
+    metadata:
+      labels:
+        app: pathnex-web-app
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: pathnex-web-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: pathnex-web-app
+  minReplicas: 3
+  maxReplicas: 14
+  targetCPUUtilizationPercentage: 80
+
+# Jenkinsfile — Scaling CI/CD Pipeline
+pipeline {
+    agent any
+    stages {
+        stage('Scale Up') {
+            steps {
+                echo 'Scaling up Jenkins pipeline agents for heavy workloads...'
+                // Simulating scaling logic
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building project...'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying project...'
+            }
+        }
+    }
+}
+
+
+# Docker
+# Healthcheck
+
+FROM nginx
+HEALTHCHECK CMD curl --fail http://localhost || exit 1
+
+#Revision of docker commands
+sudo service docker start
+sudo service docker status
+docker info
+docker list
+docker inspect containerid or contname
+docker ps 
+docekr ps -a 
+docker rm container name 
+docker rmi image name
+docker system prune -a
+docker logs  cont id
+docker network ls
+docker start cont id 
+docker stop cont id 
+docker build -t imagename . 
+docker tag user/imagename:v1 
+docker push user/imagename
+docker run -d -p 80:80 --name cont name imagename 
+docker exec -it cont id /bin/bash
+
+#some git command
+git status
+git pull 
+git fetch
+git rebase
+git add .
+git commit -m "mycommit"
+git commit -a -m "mycommit"
+git push
+git push -u origin main
+git branch 
+git branch -r OR -a
+git log
+git branch newbranch
+git switch newbranch
+git clone url
+git branch -d newbranch
+git push origin --delete newbranch
+git remote add origin url
+git branch -M main
