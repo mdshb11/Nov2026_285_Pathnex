@@ -1,0 +1,173 @@
+Day 22 — Multi-Cluster Kubernetes Management
+
+# Ansible — Deploy Nginx Across Multiple Kubernetes Clusters
+
+- name: Deploy Nginx across multiple Kubernetes clusters
+  hosts: localhost
+  tasks:
+    - name: Configure kubectl for cluster 1
+      command: kubectl --context=us-east config use-context us-east-cluster
+    - name: Deploy Nginx on Cluster 1
+      command: kubectl apply -f kubernetes/deployment.yaml
+    - name: Configure kubectl for cluster 2
+      command: kubectl --context=us-west config use-context us-west-cluster
+    - name: Deploy Nginx on Cluster 2
+      command: kubectl apply -f kubernetes/deployment.yaml
+
+# Terraform — Multi-Region Kubernetes Cluster with EKS and GKE
+
+resource "aws_eks_cluster" "shoib_eks" {
+  name     = "shoib-eks-cluster"
+  role_arn = aws_iam_role.eks_cluster_role.arn
+
+  vpc_config {
+    subnet_ids = [aws_subnet.shoib_subnet.id]
+  }
+
+  depends_on = [aws_iam_role_policy_attachment.eks_cluster_role_policy]
+}
+
+resource "google_container_cluster" "shoib_gke" {
+  name     = "shoib-gke-cluster"
+  location = "us-central1-a"
+  initial_node_count = 3
+  node_config {
+    machine_type = "n1-standard-1"
+  }
+}
+
+# Kubernetes — Federated Deployment with Multiple Clusters
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shoib-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: shoib-app
+  template:
+    metadata:
+      labels:
+        app: shoib-app
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+---
+apiVersion: federation.k8s.io/v1beta1
+kind: FederatedDeployment
+metadata:
+  name: shoib-federated-deployment
+  namespace: default
+spec:
+  template:
+    spec:
+      replicas: 3
+      selector:
+        matchLabels:
+          app: shoib-app
+      template:
+        metadata:
+          labels:
+            app: shoib-app
+        spec:
+          containers:
+            - name: nginx
+              image: nginx
+              ports:
+                - containerPort: 80
+
+# Jenkinsfile — Multi-Cluster Deployment Strategy
+
+pipeline {
+    agent any
+    stages {
+        stage('Deploy to Cluster 1') {
+            steps {
+                script {
+                    sh 'kubectl --context=us-east-cluster apply -f kubernetes/deployment.yaml'
+                }
+            }
+        }
+        stage('Deploy to Cluster 2') {
+            steps {
+                script {
+                    sh 'kubectl --context=us-west-cluster apply -f kubernetes/deployment.yaml'
+                }
+            }
+        }
+    }
+}
+
+# GitLab CI/CD — Multi-Cluster Deployment Strategy
+
+stages:
+  - deploy
+
+deploy_cluster_1:
+  stage: deploy
+  script:
+    - kubectl --context=us-east-cluster apply -f kubernetes/deployment.yaml
+
+deploy_cluster_2:
+  stage: deploy
+  script:
+    - kubectl --context=us-west-cluster apply -f kubernetes/deployment.yaml
+
+# Docker
+# Compose with MySQL
+version: '3'
+services:
+  db:
+    image: mysql:8
+    container_name: shoib-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  web:
+    image: nginx
+    container_name: shoib-web
+
+# Linux command revised.....
+ifconfig
+free, df -h
+top, htop
+ps -a, kill -9 pid, ps -u, ps aux | grep nginx
+hostname -I, ip a 
+nslookup google.com
+ss -a #all ports
+nano, vi, vim
+mkdir, rmdir, mv, rm -rf
+rsync -zvhs src des OR rsysc -rvhs src server2
+cp -rvf abc abz
+scp -i key.pem autodata.sh ubuntu@44.203.49.208:/home/ubuntu
+scp -i autodata.sh ubuntu@44.203.49.208:~
+
+sudo chmod 644 /mydir/abc.txt --r=4 w=2 x=1 no=0       rwxrwxrwx 777 
+sudo chown ubuntu /user/ubuntu/abc 
+sudo chgrp ubuntu /user/ubuntu/abc
+sudo chown testuser:analyst /user/ubuntu/abc ---change both  user:group
+
+files commands-	cat, tac, touch, file, whatis, pwd, cd, man, ls, history
+head -n 15 abc.txt
+tail -n 20 abc.txt
+
+echo "This is a random my world" | sudo tee -a file1 file2 ----- -a is append
+grep -in shb /home/ubuntu/file.txt
+ls -l /usr/bin | grep shb, ls -lrt, ls-lrth
+
+find /ubuntu/abc -name xyz.txt,	find /path -type d -name dirame
+
+sed 's/error/warn/g' dir/file.log --- show just
+sed -i 's/error/warn/g' dir/file.log --- replace error with warn
+sed -n '10,20p' filename.txt 
+sed -n '/error/p' dir/file.log ----- print only lines with "error"
+sed 's/error/warn/gi' dir/file.log ----- i for case sesitive, Error also replace with warn
+sed -i '1i helm commands' file - insert helm commands at line 1
+
+ln -s /usr/home/file.txt  
+ln -s /usr/home/file.txt fileS.txt  
+ln /usr/home/file.txt
