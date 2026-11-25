@@ -1,0 +1,8 @@
+## Shedule of Wednesday-25.11.2026
+-----------------------------------
+3 hr     Morning class Kafka
+-
+2 hr     revision of kafka
+2 hr     english videos and command revised - terraform, linx
+1 hr     coding of ansible terraform, jenkins, gitlab, K8S yaml
+30 min   introduction video
