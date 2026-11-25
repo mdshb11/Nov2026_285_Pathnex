@@ -148,7 +148,7 @@ alias tfr='terraform refresh'
 alias tfwl='terraform workspace list'
 alias tfws='terraform workspace show'
 
-# Linux command revised.....
+# Linux usefull command...
 ifconfig
 free, df -h
 top, htop
