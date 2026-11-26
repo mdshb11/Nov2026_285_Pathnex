@@ -93,3 +93,50 @@ deploy:
 # Docker Logs & Inspect
 docker logs pathnex-nginx
 docker inspect pathnex-nginx
+sudo service docker start
+sudo service docker status
+docker info
+docker list
+docker inspect containerid or contname
+docker ps 
+docekr ps -a 
+docker rm container name 
+docker rmi image name
+docker system prune -a
+docker logs  cont id
+docker network ls
+docker start cont id 
+docker stop cont id 
+docker build -t imagename . 
+docker tag user/imagename:v1 
+docker push user/imagename
+docker run -d -p 80:80 --name cont name imagename 
+docker exec -it cont id /bin/bash
+
+# linux commands
+ls -la
+pwd, cd .. , cd ../../../
+mkdir new_directory, rm file.txt, cp file1.txt file2.txt, mv file1.txt file2.txt
+cat file.txt
+echo "Hello, World!" > file.txt
+ps aux
+top, kill -9 PID, ping google.com
+wget https://example.com/file.zip
+unzip file.zip
+
+echo "This is a random my world" | sudo tee -a file1 file2 ----- -a is append
+grep -in shb /home/ubuntu/file.txt
+ls -l /usr/bin | grep shb, ls -lrt, ls-lrth
+
+find /ubuntu/abc -name xyz.txt,	find /path -type d -name dirame
+
+sed 's/error/warn/g' dir/file.log --- show just
+sed -i 's/error/warn/g' dir/file.log --- replace error with warn
+sed -n '10,20p' filename.txt 
+sed -n '/error/p' dir/file.log ----- print only lines with "error"
+sed 's/error/warn/gi' dir/file.log ----- i for case sesitive, Error also replace with warn
+sed -i '1i helm commands' file - insert helm commands at line 1
+
+ln -s /usr/home/file.txt  
+ln -s /usr/home/file.txt fileS.txt  
+ln /usr/home/file.txt
