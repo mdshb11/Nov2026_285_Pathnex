@@ -1,0 +1,190 @@
+# Day 25 — Continuous Monitoring and Alerts
+
+## # Ansible — Setup Prometheus Node Exporter for Monitoring
+
+```yaml
+
+- name: Setup Prometheus Node Exporter
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Prometheus Node Exporter
+      yum:
+        name: prometheus-node-exporter
+        state: present
+    - name: Start Prometheus Node Exporter service
+      service:
+        name: prometheus-node-exporter
+        state: started
+        enabled: yes
+
+# Terraform — Create CloudWatch Alarms
+
+resource "aws_cloudwatch_metric_alarm" "pathnex_cpu_alarm" {
+  alarm_name          = "pathnex-cpu-utilization-high"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "80"
+
+  dimensions = {
+    InstanceId = aws_instance.pathnex_ec2.id
+  }
+
+  alarm_actions = [aws_sns_topic.pathnex_alerts.arn]
+}
+
+resource "aws_sns_topic" "pathnex_alerts" {
+  name = "pathnex-alerts"
+}
+
+# Kubernetes — Set Up Prometheus and Grafana
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:latest
+          ports:
+            - containerPort: 9090
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          ports:
+            - containerPort: 3000
+
+# Jenkinsfile — Continuous Monitoring and Alerts in CI Pipeline
+pipeline {
+    agent any
+    stages {
+        stage('Monitor') {
+            steps {
+                script {
+                    echo 'Triggering CloudWatch alarms if CPU exceeds 80%'
+                    sh 'aws cloudwatch put-metric-data --namespace "AWS/EC2" --metric-name "CPUUtilization" --value 90'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+    }
+}
+
+# GitLab CI/CD — Monitoring and Alerting in CI/CD Pipeline
+stages:
+  - monitor
+  - test
+
+monitor:
+  stage: monitor
+  script:
+    - aws cloudwatch put-metric-data --namespace "AWS/EC2" --metric-name "CPUUtilization" --value 90
+
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+
+
+
+# Docker
+# .dockerignore file
+node_modules
+.git
+temp
+
+#terraform command 
+
+alais tf='terraform'
+alias tfi='terraform init'
+alias tfv='terraform validate'
+alias tff='terraform fmt'
+alias tfp='terraform plan'
+alias tfa='terraform apply'
+alias tfaa='terraform apply -auto-approve'
+
+alias tfd='terraform destroy'
+alias tfda='terraform destroy -auto-approve'
+
+alias tfo='terraform output'
+alias tfs='terraform show'
+
+alias tfsl='terraform state list'
+alias tfu='terraform force-unlock lockid'
+alais tfm='terraform import resourceid
+alias tfr='terraform refresh'
+alias tfwl='terraform workspace list'
+alias tfws='terraform workspace show'
+
+# Linux usefull command...
+ifconfig
+free, df -h
+top, htop
+ps -a, kill -9 pid, ps -u, ps aux | grep nginx
+hostname -I, ip a 
+nslookup google.com
+ss -a #all ports
+nano, vi, vim
+mkdir, rmdir, mv, rm -rf
+rsync -zvhs src des OR rsysc -rvhs src server2
+cp -rvf abc abz
+scp -i key.pem autodata.sh ubuntu@44.203.49.208:/home/ubuntu
+scp -i autodata.sh ubuntu@44.203.49.208:~
+
+sudo chmod 644 /mydir/abc.txt --r=4 w=2 x=1 no=0       rwxrwxrwx 777 
+sudo chown ubuntu /user/ubuntu/abc 
+sudo chgrp ubuntu /user/ubuntu/abc
+sudo chown testuser:analyst /user/ubuntu/abc ---change both  user:group
+
+files commands-	cat, tac, touch, file, whatis, pwd, cd, man, ls, history
+head -n 15 abc.txt
+tail -n 20 abc.txt
+
+echo "This is a random my world" | sudo tee -a file1 file2 ----- -a is append
+grep -in shb /home/ubuntu/file.txt
+ls -l /usr/bin | grep shb, ls -lrt, ls-lrth
+
+find /ubuntu/abc -name xyz.txt,	find /path -type d -name dirame
+
+sed 's/error/warn/g' dir/file.log --- show just
+sed -i 's/error/warn/g' dir/file.log --- replace error with warn
+sed -n '10,20p' filename.txt 
+sed -n '/error/p' dir/file.log ----- print only lines with "error"
+sed 's/error/warn/gi' dir/file.log ----- i for case sesitive, Error also replace with warn
+sed -i '1i helm commands' file - insert helm commands at line 1
+
+ln -s /usr/home/file.txt  
+ln -s /usr/home/file.txt fileS.txt  
+ln /usr/home/file.txt
