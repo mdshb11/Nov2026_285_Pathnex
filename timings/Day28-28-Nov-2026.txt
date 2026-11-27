@@ -1,0 +1,8 @@
+## Shedule of Saturday-28.11.2026
+-----------------------------------
+3 hr     Morning class Devsecops
+-
+2 hr     revision of Devsecops and command practice - git, linux
+1 hr     revision of linux and docker command
+1 hr     coding of ansible terraform, jenkins, gitlab, dockerfile
+1.5 hr   english video and intro

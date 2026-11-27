@@ -1,0 +1,119 @@
+# Day 28 — Advanced Networking with VPCs and Peering
+
+# Ansible — Set Up VPC Peering Between AWS Accounts
+
+```yaml
+
+- name: Setup VPC Peering Between Accounts
+  hosts: localhost
+  tasks:
+    - name: Create VPC peering connection
+      command: aws ec2 create-vpc-peering-connection --vpc-id vpc-12345678 --peer-vpc-id vpc-87654321
+      
+      
+# Terraform — VPC Peering and Route Tables
+
+resource "aws_vpc_peering_connection" "shoib_peering" {
+  vpc_id      = aws_vpc.shoib_vpc.id
+  peer_vpc_id = aws_vpc.peer_vpc.id
+}
+
+resource "aws_route" "shoib_route" {
+  route_table_id         = aws_route_table.shoib_rt.id
+  destination_cidr_block = "10.0.0.0/16"
+  vpc_peering_connection_id = aws_vpc_peering_connection.shoib_peering.id
+}      
+
+# Kubernetes — Multi-Cluster VPC Peering and Network Policy
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shoib-vpc-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: shoib-app
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: shoib-db
+              
+
+# Docker Save, Load & Backup
+docker save -o shoib-nginx.tar shoib-nginx
+
+docker load -i shoib-nginx.tar
+
+# Bash
+docker run --rm -v shoib-volume:/data -v $(pwd):/backup ubuntu tar czf /backup shoib-backup.tar.gz /data             
+
+# Linux commands
+cd, cp, mv, rm -rf, ls, ls -lrth, mkdir, rmdir vi nano vim touch
+
+which, history,tee, whoami
+
+ifconfig, ping url, ps -a, ip a, wget, tar -czf, kill -9 pid, df -h, du -h, free
+
+head -n 5 abc, tail -n 5 abc, cat abc, grep "shoib" abc, top, htop, 
+
+grep -R shoib file.txt, locate shoib, 
+
+chmod 755 abc, chown user:group abc,chgrp 755 abc, umask 022 abc,
+
+locate shoib, chmod 755 abc, chown user:group abc,chgrp 755 abc, umask 022 abc
+
+ln -s /usr/local/bin/target softlink, stat abc, file abc, 
+
+diff file1 file2, sort file.txt, uniq file.txt, wc -l file.txt, 
+
+cut -d',' -f1 file.csv, awk '{print $1}' file.txt, 
+
+sed -i 's/old/new/g' file.txt 
+sed -n '/pattern/p' file.txt
+sed -n '1,5p' file.txt
+sed -e 's/old/new/g' -e 's/foo/bar/g' file.txt
+sed -i '1i This is a new first line' file.txt
+
+ln usr/bin/local /local
+find /usr/bin/local -name abc.txt
+find ~ -type d -name shoib_dir
+
+scp -i autodata.sh ubuntu@44.203.49.208:~
+scp anm atq@446.3.22.365:~
+ssh -i key.pem ubuntu@44.203.49.208
+
+echo "This is a random my world" | sudo tee -a file1 file2 # -a is to append
+grep -in shb /home/ubuntu/file.txt
+
+# git
+
+git status
+git add file.txt
+git restore --staged file.txt
+
+git add . && git commit -m "A"
+
+git commit -m "Added file.txt"
+git reset --soft HEAD~1
+
+git push -u origin main
+git pull
+git fetch
+git merge origin/main
+git switch -c 3_nov
+git branch -m old_branch_name new_branch_name
+git push origin --delete b1
+git branch main
+git remote add origin url
+git clone url
+git config --global --list
+git branch -M main
+git branch -d newbranch
+git push origin --delete newbranch
+git remote add origin url
+git branch -M main
+git diff origin/24_nov..24_nov
+
+
