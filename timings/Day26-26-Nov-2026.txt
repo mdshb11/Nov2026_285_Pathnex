@@ -3,6 +3,6 @@
 3 hr     Morning class SSL/TLS
 -
 2 hr     revision of SSL/TLS
-2 hr     english videos and command revised
+2 hr     english videos and command revised - docker linux
 1 hr     coding of ansible terraform, jenkins, gitlab, K8S yaml
 30 min   introduction video
